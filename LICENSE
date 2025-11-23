@@ -1,0 +1,27 @@
+Portfolio Project License
+
+Copyright (c) 2025. All rights reserved.
+
+このプロジェクトはポートフォリオ目的で作成されています。
+
+【許可される行為】
+- 学習目的での閲覧・参考
+- 採用選考における評価目的での閲覧
+- 技術スタックやアーキテクチャの参考
+
+【禁止される行為】
+- コードのコピー・流用
+- 商用利用
+- 再配布
+- 改変しての公開
+
+本プロジェクトの技術的なアプローチやアーキテクチャを参考にすることは
+歓迎しますが、コードをそのままコピーして使用することは固く禁じます。
+
+質問や技術的な議論は歓迎します。GitHubのIssueまたは
+コンタクト情報からお気軽にご連絡ください。
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+

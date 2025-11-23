@@ -207,16 +207,112 @@ npm run dev
 
 ## 🚀 今後の拡張機能
 
-- [ ] ユーザー認証（JWT）
-- [ ] データベース永続化（PostgreSQL本番連携）
+### Phase 1: SRE基盤強化（ローカル環境）
+
+**データ永続化・可観測性の実装**
+
+- [ ] **PostgreSQL完全実装**
+  - SQLAlchemy ORM導入
+  - Alembicによるマイグレーション管理
+  - メモリDBから実DBへ完全移行
+
+- [ ] **ヘルスチェック改善**
+  - `/health/liveness` - プロセス生存確認
+  - `/health/readiness` - DB接続確認（外部依存チェック）
+  - Kubernetes ready
+
+- [ ] **構造化ログ（JSON形式）**
+  - python-json-logger導入
+  - リクエスト/レスポンスログ
+  - エラートラッキング
+
+- [ ] **メトリクスエンドポイント**
+  - Prometheus形式の `/metrics` エンドポイント
+  - カスタムメトリクス（Todo作成数、API応答時間など）
+  - Counter, Gauge, Histogram実装
+
+- [ ] **Redisキャッシング層**
+  - Docker Composeに追加
+  - Todoリストのキャッシング
+  - セッション管理基盤
+
+- [ ] **本番対応機能**
+  - Graceful shutdown実装
+  - レートリミット（API保護）
+  - エラーハンドリング強化
+
+**監視ツール導入（ローカル）**
+
+- [ ] **Prometheus + Grafana**
+  - Docker Composeで監視環境構築
+  - カスタムダッシュボード作成
+  - アラートルール設定
+
+- [ ] **負荷テスト**
+  - Locust または k6 導入
+  - パフォーマンスベンチマーク
+  - ボトルネック特定
+
+### Phase 2: Kubernetes（ローカル）
+
+- [ ] minikube/kind環境構築
+- [ ] Deployment, Service, Ingressマニフェスト
+- [ ] ConfigMap/Secret管理
+- [ ] Helmチャート化
+- [ ] HPA（オートスケーリング）設定
+
+### Phase 3: AWS移行（IaC）
+
+**インフラストラクチャ**
+
+- [ ] **Terraform構築**
+  - VPC, Subnet, Security Group
+  - EKS（Kubernetes）または ECS
+  - RDS Aurora（PostgreSQL互換）
+  - ElastiCache（Redis）
+  - ALB, Route53, ACM
+
+- [ ] **環境分離**
+  - dev/staging/prod環境
+  - Terraform Workspaces
+
+### Phase 4: CI/CD
+
+- [ ] **GitHub Actions**
+  - Lint, Test, Build
+  - Docker image build & ECR push
+  - 自動デプロイ
+
+- [ ] **ArgoCD（GitOps）**
+  - K8sへの継続的デリバリー
+  - ロールバック戦略
+
+### Phase 5: 本番運用
+
+- [ ] **監視・可観測性（AWS）**
+  - Datadog または Prometheus + Grafana
+  - CloudWatch Logs統合
+  - 分散トレーシング（X-Ray/Jaeger）
+  - SLI/SLO/SLA定義
+
+- [ ] **セキュリティ**
+  - AWS Secrets Manager
+  - IAMロール最適化
+  - セキュリティグループ最小権限
+
+- [ ] **災害復旧（DR）**
+  - 自動バックアップ戦略
+  - RTO/RPO定義
+  - マルチAZ構成
+
+### Phase 6: 機能拡張
+
+- [ ] ユーザー認証（JWT + OAuth）
 - [ ] 期限管理・通知機能
-- [ ] ドラッグ&ドロップによる並び替え
 - [ ] ファイル添付機能（S3連携）
-- [ ] 検索機能の強化
-- [ ] タグ機能
-- [ ] AWSへのデプロイ（ECS/RDS/S3/CloudFront）
-- [ ] CI/CDパイプライン（GitHub Actions）
-- [ ] テストコード（Pytest/Jest）
+- [ ] 検索機能の強化（Elasticsearch）
+- [ ] テストコード（Pytest/Jest、カバレッジ80%以上）
+- [ ] E2Eテスト（Playwright/Cypress）
 
 ## 📝 環境変数
 
@@ -236,15 +332,31 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ## 🤝 コントリビューション
 
-プルリクエストを歓迎します！大きな変更の場合は、まずイシューを開いて変更内容を議論してください。
+このプロジェクトはポートフォリオ目的で作成されています。
+Issue報告やフィードバックは歓迎しますが、Pull Requestは受け付けておりません。
 
 ## 📄 ライセンス
 
-MIT License
+**このプロジェクトはポートフォリオ目的で作成されています。**
+
+### 利用条件
+
+- ✅ **閲覧・参考**: 学習目的での閲覧・参考は自由
+- ✅ **採用選考**: 採用担当者による評価目的での閲覧
+- ❌ **商用利用**: 禁止
+- ❌ **再配布**: 禁止  
+- ❌ **コピー使用**: コードのコピー・流用は禁止
+
+本プロジェクトの技術スタックやアーキテクチャを参考にすることは歓迎しますが、
+コードをそのままコピーして使用することはご遠慮ください。
+
+**Copyright © 2025. All rights reserved.**
 
 ## 👤 作成者
 
-Portfolio Project - 2025
+**Portfolio Project** - SRE学習プロジェクト
+
+作成年: 2025
 
 ---
 
