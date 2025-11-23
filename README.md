@@ -1,84 +1,82 @@
-# 📝 Todo App - Portfolio Project
+# 📝 Todo App - ポートフォリオプロジェクト
 
-**English** | [日本語](README.ja.md)
+Next.js と FastAPI で構築したモダンなタスク管理アプリケーションです。
 
-Modern full-stack todo application built with Next.js and FastAPI.
+## 🌐 ライブデモ
 
-## 🌐 Live Demo
+**🚀 [ライブデモ](https://your-demo-url.vercel.app)** *（準備中）*
 
-**🚀 [Live Demo](https://your-demo-url.vercel.app)** *(Coming soon)*
+> **注意:** バックエンドは Render.com の無料プランを使用しているため、初回リクエスト時にサーバーの起動に約15秒かかる場合があります。
 
-> **Note:** The backend uses Render.com free tier, so the first request may take ~15 seconds to wake up the server.
+## 🎥 デモ動画
 
-## 🎥 Demo
+![デモ](docs/demo.gif)
 
-![Demo](docs/demo.gif)
+## 📸 スクリーンショット
 
-## 📸 Screenshots
+### メインダッシュボード
+![ダッシュボード](docs/images/1-dashboard.png)
 
-### Main Dashboard
-![Dashboard](docs/images/1-dashboard.png)
+### Todo作成
+![Todo作成](docs/images/2-create-todo.png)
 
-### Todo Creation
-![Create Todo](docs/images/2-create-todo.png)
+### Todoリスト
+![Todoリスト](docs/images/3-todo-list.png)
 
-### Todo List
-![Todo List](docs/images/3-todo-list.png)
+### フィルター表示
+![フィルター](docs/images/4-filters.png)
 
-### Filter View
-![Filters](docs/images/4-filters.png)
+### モバイル対応
+![モバイル表示](docs/images/5-mobile.png)
 
-### Mobile Responsive
-![Mobile View](docs/images/5-mobile.png)
+## 📚 ドキュメント
 
-## 📚 Documentation
+- 📋 [要件定義書](REQUIREMENTS.md) - プロジェクトの目的、ターゲットユーザー、機能
+- 🚀 [セットアップガイド](SETUP.md) - アプリケーションの起動方法
+- 💻 [開発ガイド](DEVELOPMENT.md) - Gitワークフローと開発のベストプラクティス
 
-- 📋 [Requirements Definition](REQUIREMENTS.md) - Project goals, target users, and features
-- 🚀 [Setup Guide](SETUP.md) - How to run the application
-- 💻 [Development Guide](DEVELOPMENT.md) - Git workflow and best practices
+## 🚀 技術スタック
 
-## 🚀 Tech Stack
+### フロントエンド
+- **Next.js 14** - SSR/SSG対応のReactフレームワーク
+- **TypeScript** - 型安全な開発
+- **Tailwind CSS** - ユーティリティファーストなCSSフレームワーク
+- **Axios** - HTTPクライアント
 
-### Frontend
-- **Next.js 14** - React framework with SSR/SSG
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first CSS framework
-- **Axios** - HTTP client
+### バックエンド
+- **Python 3.11** - プログラミング言語
+- **FastAPI** - 高性能Webフレームワーク
+- **Pydantic** - データバリデーション
+- **Uvicorn** - ASGIサーバー
 
-### Backend
-- **Python 3.11** - Programming language
-- **FastAPI** - High-performance web framework
-- **Pydantic** - Data validation
-- **Uvicorn** - ASGI server
+### インフラ
+- **Docker** - コンテナ化
+- **Docker Compose** - マルチコンテナオーケストレーション
+- **PostgreSQL 16** - リレーショナルデータベース
 
-### Infrastructure
-- **Docker** - Containerization
-- **Docker Compose** - Multi-container orchestration
-- **PostgreSQL 16** - Relational database
+## ✨ 機能
 
-## ✨ Features
+- ✅ TodoのCRUD操作（作成、読み取り、更新、削除）
+- ✅ カテゴリ管理
+- ✅ 完了状態の切り替え
+- ✅ ステータスによるフィルタリング（すべて / 未完了 / 完了済み）
+- ✅ 統計ダッシュボード
+- ✅ レスポンシブデザイン
+- ✅ リアルタイム更新
 
-- ✅ Todo CRUD operations (Create, Read, Update, Delete)
-- ✅ Category management
-- ✅ Completion status toggle
-- ✅ Filter by status (All / Active / Completed)
-- ✅ Statistics dashboard
-- ✅ Responsive design
-- ✅ Real-time updates
+## 🎯 プロジェクトの目的
 
-## 🎯 Project Goals
+このプロジェクトでは以下のスキルを実証します:
+- フルスタック開発スキル（フロントエンド + バックエンド + インフラ）
+- モダンな技術スタック（Next.js、FastAPI、Docker、PostgreSQL）
+- RESTful APIの設計と実装
+- レスポンシブなUI/UXデザイン
+- Dockerによるコンテナ化とデプロイ
+- Gitワークフローとドキュメンテーション
 
-This project demonstrates:
-- Full-stack development skills (Frontend + Backend + Infrastructure)
-- Modern tech stack (Next.js, FastAPI, Docker, PostgreSQL)
-- RESTful API design and implementation
-- Responsive UI/UX design
-- Docker containerization and deployment
-- Git workflow and documentation
+詳細なプロジェクト要件とアーキテクチャの決定については、[要件定義書](REQUIREMENTS.md)を参照してください。
 
-See [REQUIREMENTS.md](REQUIREMENTS.md) for detailed project requirements and architecture decisions.
-
-## 🏗️ Project Structure
+## 🏗️ プロジェクト構成
 
 ```
 app1/
@@ -86,7 +84,7 @@ app1/
 │   ├── main.py          # メインアプリケーション
 │   ├── requirements.txt # Python 依存関係
 │   ├── Dockerfile       # バックエンド用 Docker 設定
-│   └── .env.example     # 環境変数のサンプル
+│   └── .gitignore       # Git 除外設定
 ├── frontend/            # Next.js フロントエンド
 │   ├── src/
 │   │   ├── app/        # Next.js App Router
@@ -96,8 +94,14 @@ app1/
 │   ├── package.json    # Node.js 依存関係
 │   ├── Dockerfile      # フロントエンド用 Docker 設定
 │   └── tsconfig.json   # TypeScript 設定
+├── docs/                # ドキュメント・画像
+│   ├── images/         # スクリーンショット
+│   └── demo.gif        # デモ動画
 ├── docker-compose.yml   # Docker Compose 設定
-└── README.md           # このファイル
+├── README.md           # このファイル
+├── REQUIREMENTS.md     # 要件定義書
+├── SETUP.md            # セットアップガイド
+└── DEVELOPMENT.md      # 開発ガイド
 ```
 
 ## 🛠️ セットアップ方法
@@ -175,10 +179,10 @@ npm install
 npm run dev
 ```
 
-## 📚 API エンドポイント
+## 📚 APIエンドポイント
 
 ### ヘルスチェック
-- `GET /` - API ステータス
+- `GET /` - APIステータス
 - `GET /health` - 詳細ヘルスチェック
 
 ### Todo管理
@@ -201,18 +205,18 @@ npm run dev
 4. **削除**: ゴミ箱アイコンをクリックしてTodoを削除
 5. **統計表示**: リアルタイムでTodoの統計情報を表示
 
-## 🚀 次のステップ（拡張機能）
+## 🚀 今後の拡張機能
 
 - [ ] ユーザー認証（JWT）
-- [ ] データベース連携（PostgreSQL）
+- [ ] データベース永続化（PostgreSQL本番連携）
 - [ ] 期限管理・通知機能
-- [ ] ドラッグ&ドロップ並び替え
+- [ ] ドラッグ&ドロップによる並び替え
 - [ ] ファイル添付機能（S3連携）
-- [ ] 検索機能
+- [ ] 検索機能の強化
 - [ ] タグ機能
-- [ ] AWS デプロイ（ECS/RDS/S3/CloudFront）
-- [ ] CI/CD パイプライン（GitHub Actions）
-- [ ] テスト（Pytest/Jest）
+- [ ] AWSへのデプロイ（ECS/RDS/S3/CloudFront）
+- [ ] CI/CDパイプライン（GitHub Actions）
+- [ ] テストコード（Pytest/Jest）
 
 ## 📝 環境変数
 
@@ -230,7 +234,7 @@ ENVIRONMENT=development
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-## 🤝 貢献
+## 🤝 コントリビューション
 
 プルリクエストを歓迎します！大きな変更の場合は、まずイシューを開いて変更内容を議論してください。
 
@@ -244,4 +248,4 @@ Portfolio Project - 2025
 
 ---
 
-**Built with ❤️ using Next.js, TypeScript, FastAPI, Docker, and PostgreSQL**
+**Next.js、TypeScript、FastAPI、Docker、PostgreSQL で構築 ❤️**

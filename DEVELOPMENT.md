@@ -1,284 +1,280 @@
-# 📖 Development Guide
+# 💻 開発ガイド
 
-This document describes the development workflow for this project.
+このドキュメントでは、プロジェクトの開発ワークフローを説明します。
 
-## 🌿 Git Workflow
+## 🌿 Gitワークフロー
 
-### Branch Strategy
+### ブランチ戦略
 
 ```
-main
-  └─ develop
+main（本番環境）
+  └─ develop（開発統合）
       ├─ feature/todo-crud
       ├─ feature/user-auth
       └─ feature/database-integration
 ```
 
-### Branch Naming Convention
+### ブランチ命名規則
 
-- `feature/*` - New features (e.g., `feature/add-statistics`)
-- `fix/*` - Bug fixes (e.g., `fix/todo-deletion-error`)
-- `docs/*` - Documentation updates (e.g., `docs/update-readme`)
-- `refactor/*` - Code refactoring (e.g., `refactor/api-structure`)
+- `feature/*` - 新機能（例: `feature/add-statistics`）
+- `fix/*` - バグ修正（例: `fix/todo-deletion-error`）
+- `docs/*` - ドキュメント更新（例: `docs/update-readme`）
+- `refactor/*` - リファクタリング（例: `refactor/api-structure`）
+- `test/*` - テスト追加（例: `test/add-unit-tests`）
+- `chore/*` - 雑務（例: `chore/update-dependencies`）
 
-## 📝 Commit Message Convention
+## 📝 コミットメッセージ規約
 
-Use clear, descriptive commit messages:
+明確で説明的なコミットメッセージを使用します（Conventional Commits）：
 
 ```bash
-# Format
-<type>: <short description>
+# フォーマット
+<type>: <簡潔な説明>
 
-# Examples
-feat: Add user authentication with JWT
-fix: Fix todo deletion not working
-docs: Update API documentation
-style: Format code with prettier
-refactor: Restructure API endpoints
-test: Add unit tests for todo service
-chore: Update dependencies
+# 例
+feat: add user authentication with JWT
+fix: resolve todo deletion bug
+docs: update API documentation
+style: format code with prettier
+refactor: restructure API endpoints
+test: add unit tests for todo service
+chore: update dependencies
 ```
 
-### Commit Types
+### コミットタイプ
 
-- `feat` - New feature
-- `fix` - Bug fix
-- `docs` - Documentation only
-- `style` - Code style (formatting, no code change)
-- `refactor` - Code refactoring
-- `test` - Adding tests
-- `chore` - Build, config, dependencies
+- `feat` - 新機能
+- `fix` - バグ修正
+- `docs` - ドキュメントのみの変更
+- `style` - コードスタイル（フォーマット、コード変更なし）
+- `refactor` - リファクタリング
+- `test` - テストの追加
+- `chore` - ビルド、設定、依存関係
 
-## 🚀 Development Workflow
+## 🚀 開発ワークフロー
 
-### 1. Start New Feature
+### 1. 新機能の開発を開始
 
 ```bash
-# Create feature branch from develop
-git checkout develop
-git pull origin develop
+# main から feature ブランチを作成
+git checkout main
+git pull origin main
 git checkout -b feature/your-feature-name
 ```
 
-### 2. Make Changes
+### 2. 変更を加える
 
 ```bash
-# Make your changes
-# Test thoroughly
+# コードを変更
+# 十分にテスト
 
-# Stage changes
+# 変更をステージング
 git add .
 
-# Commit with descriptive message
-git commit -m "feat: Add your feature description"
+# 説明的なメッセージでコミット
+git commit -m "feat: add your feature description"
 ```
 
-### 3. Push and Create Pull Request
+### 3. プッシュしてPull Requestを作成
 
 ```bash
-# Push to remote
+# リモートにプッシュ
 git push origin feature/your-feature-name
 
-# Create Pull Request on GitHub
-# Request code review (if team project)
+# GitHubでPull Requestを作成
+# （チームプロジェクトの場合）コードレビューを依頼
 ```
 
-### 4. Merge to Develop
+### 4. mainにマージ
 
 ```bash
-# After approval, merge to develop
-git checkout develop
-git merge feature/your-feature-name
-
-# Or use GitHub's merge button
-```
-
-### 5. Deploy to Main
-
-```bash
-# When ready for production
+# 承認後、mainにマージ
 git checkout main
-git merge develop
+git merge feature/your-feature-name
 git push origin main
+
+# または、GitHubのマージボタンを使用
 ```
 
-## 🔄 Regular Tasks
-
-### Update Dependencies
+### 5. ブランチのクリーンアップ
 
 ```bash
-# Backend
+# ローカルブランチを削除
+git branch -d feature/your-feature-name
+
+# リモートブランチを削除
+git push origin --delete feature/your-feature-name
+```
+
+## 🔄 定期的なタスク
+
+### 依存関係の更新
+
+```bash
+# バックエンド
 cd backend
 pip list --outdated
 pip install -U <package-name>
+pip freeze > requirements.txt
 
-# Frontend
+# フロントエンド
 cd frontend
 npm outdated
 npm update
 ```
 
-### Run Tests
+### テストの実行
 
 ```bash
-# Backend
+# バックエンド（将来実装予定）
 cd backend
 pytest
 
-# Frontend
+# フロントエンド（将来実装予定）
 cd frontend
 npm test
 ```
 
-### Check Code Quality
+### コード品質のチェック
 
 ```bash
-# Backend
+# バックエンド（将来実装予定）
 cd backend
 flake8 .
 black .
 
-# Frontend
+# フロントエンド
 cd frontend
 npm run lint
-npm run type-check
 ```
 
-## 📦 Release Process
+## 📦 リリースプロセス
 
-### 1. Version Bump
+### 1. バージョンアップ
 
 ```bash
-# Update version in:
-# - package.json
-# - backend/main.py (if applicable)
-# - README.md
-
-git commit -m "chore: Bump version to 1.1.0"
+# package.json のバージョンを更新
+# CHANGELOG.md を更新
+git commit -m "chore: bump version to 1.1.0"
 ```
 
-### 2. Create Release Branch
+### 2. タグの作成
 
 ```bash
-git checkout -b release/1.1.0
-# Final testing
-# Fix any issues
+# バージョンタグを作成
+git tag -a v1.1.0 -m "Version 1.1.0 - Add authentication"
+git push origin v1.1.0
 ```
 
-### 3. Merge to Main
+### 3. リリースノートの作成
+
+GitHubで新しいリリースを作成し、変更内容を記載します。
+
+## 🐛 トラブルシューティング
+
+### コンフリクトの解決
 
 ```bash
+# main の最新版を取得
 git checkout main
-git merge release/1.1.0
-git tag -a v1.1.0 -m "Release version 1.1.0"
-git push origin main --tags
-```
+git pull origin main
 
-### 4. Merge Back to Develop
+# feature ブランチに戻ってリベース
+git checkout feature/your-feature
+git rebase main
 
-```bash
-git checkout develop
-git merge release/1.1.0
-git push origin develop
-```
+# コンフリクトを解決
+# ファイルを編集してコンフリクトを修正
 
-## 🐛 Hotfix Process
-
-For critical bugs in production:
-
-```bash
-# Create hotfix from main
-git checkout main
-git checkout -b hotfix/critical-bug-fix
-
-# Fix the bug
-git commit -m "fix: Fix critical bug description"
-
-# Merge to main
-git checkout main
-git merge hotfix/critical-bug-fix
-git tag -a v1.0.1 -m "Hotfix version 1.0.1"
-
-# Merge to develop
-git checkout develop
-git merge hotfix/critical-bug-fix
-
-# Push
-git push origin main develop --tags
-```
-
-## 🎯 Best Practices
-
-### Code Review Checklist
-
-- [ ] Code follows style guidelines
-- [ ] Comments explain "why", not "what"
-- [ ] Tests are added/updated
-- [ ] Documentation is updated
-- [ ] No console.log or debug code
-- [ ] Error handling is proper
-- [ ] Performance is acceptable
-
-### Before Committing
-
-```bash
-# 1. Format code
-npm run lint:fix  # Frontend
-black .          # Backend
-
-# 2. Run tests
-npm test         # Frontend
-pytest           # Backend
-
-# 3. Build successfully
-npm run build    # Frontend
-docker-compose build  # Full stack
-
-# 4. Review changes
-git diff
-git status
-
-# 5. Commit
+# 変更をステージング
 git add .
-git commit -m "feat: Your descriptive message"
+
+# リベースを続行
+git rebase --continue
 ```
 
-## 🤖 Working with AI
-
-### Recommended Approach
-
-1. **Start Small**: Build features incrementally
-2. **Understand Code**: Read and understand AI-generated code
-3. **Test Thoroughly**: Always test AI-generated code
-4. **Commit Often**: Commit working code frequently
-5. **Document**: Add comments explaining complex logic
-
-### Example Workflow
+### 間違ったコミットの修正
 
 ```bash
-# 1. Create feature branch
-git checkout -b feature/add-search
+# 直前のコミットメッセージを修正
+git commit --amend -m "fix: corrected commit message"
 
-# 2. Ask AI to implement search functionality
-# 3. Review and test the code
-# 4. Make adjustments if needed
-# 5. Commit
+# 直前のコミットに変更を追加
+git add forgotten-file.ts
+git commit --amend --no-edit
 
-git add .
-git commit -m "feat: Add search functionality for todos"
-
-# 6. Continue with enhancements
-git commit -m "feat: Add search filters and sorting"
+# プッシュ済みの場合（注意: チームと調整）
+git push --force-with-lease
 ```
 
-## 📚 Resources
+## 🎯 コードレビューのチェックリスト
 
-- [Git Flow](https://nvie.com/posts/a-successful-git-branching-model/)
+### コードを書く側
+
+- [ ] コードが動作することを確認
+- [ ] エラーハンドリングを実装
+- [ ] コメントを適切に追加
+- [ ] 不要なコードを削除
+- [ ] Lintエラーがないことを確認
+- [ ] PRの説明を丁寧に記載
+
+### レビューする側
+
+- [ ] コードの意図を理解
+- [ ] バグがないか確認
+- [ ] パフォーマンスの問題がないか
+- [ ] セキュリティの問題がないか
+- [ ] 改善提案を建設的に提示
+
+## 💡 開発のベストプラクティス
+
+### コード品質
+
+1. **シンプルに保つ** - 複雑すぎるコードは避ける
+2. **DRY原則** - 同じコードを繰り返さない
+3. **命名規則** - 分かりやすい変数名・関数名
+4. **コメント** - 「なぜ」を説明する（「何を」ではなく）
+
+### Git の使い方
+
+1. **小さいコミット** - 1つの変更は1つのコミット
+2. **頻繁にコミット** - 作業を小刻みに保存
+3. **プッシュ前に確認** - `git status` と `git diff` を確認
+4. **ブランチを使う** - main に直接コミットしない
+
+### セキュリティ
+
+1. **機密情報** - `.env` ファイルは Git に含めない
+2. **依存関係** - 定期的に更新してセキュリティホールを塞ぐ
+3. **入力検証** - ユーザー入力は必ずバリデーション
+
+## 🤝 チーム開発での注意点
+
+### コミュニケーション
+
+- Pull Request には詳細な説明を記載
+- Issue を活用して議論
+- 大きな変更は事前に相談
+
+### コードレビュー
+
+- 建設的なフィードバック
+- 「なぜ」を説明する
+- 代替案を提示する
+
+### ドキュメント
+
+- README を常に最新に保つ
+- API 変更は必ずドキュメント更新
+- 複雑なロジックにはコメントを追加
+
+## 📚 参考リンク
+
 - [Conventional Commits](https://www.conventionalcommits.org/)
-- [Semantic Versioning](https://semver.org/)
+- [Git Flow](https://nvie.com/posts/a-successful-git-branching-model/)
+- [GitHub Flow](https://guides.github.com/introduction/flow/)
+- [Code Review Best Practices](https://google.github.io/eng-practices/review/)
 
 ---
 
-Happy coding! 🚀
-
-
+**Happy Coding! 🚀**
