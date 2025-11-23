@@ -4,6 +4,33 @@
 
 Modern full-stack todo application built with Next.js and FastAPI.
 
+## 🌐 Live Demo
+
+**🚀 [Live Demo](https://your-demo-url.vercel.app)** *(Coming soon)*
+
+> **Note:** The backend uses Render.com free tier, so the first request may take ~15 seconds to wake up the server.
+
+## 🎥 Demo
+
+![Demo](docs/demo.gif)
+
+## 📸 Screenshots
+
+### Main Dashboard
+![Dashboard](docs/images/1-dashboard.png)
+
+### Todo Creation
+![Create Todo](docs/images/2-create-todo.png)
+
+### Todo List
+![Todo List](docs/images/3-todo-list.png)
+
+### Filter View
+![Filters](docs/images/4-filters.png)
+
+### Mobile Responsive
+![Mobile View](docs/images/5-mobile.png)
+
 ## 📚 Documentation
 
 - 📋 [Requirements Definition](REQUIREMENTS.md) - Project goals, target users, and features
