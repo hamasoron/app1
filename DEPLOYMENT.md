@@ -8,18 +8,120 @@
 
 | オプション | コスト | 難易度 | 稼働時間 | 推奨用途 |
 |--------|------|-------|---------|----------|
+| **Docker Compose（ローカル）** | $0/月 | ⭐ | オンデマンド | 開発・学習 |
 | **Vercel + Render（無料）** | $0/月 | ⭐⭐ | 24/7* | ポートフォリオ |
-| **Railway** | $5/月 | ⭐⭐ | 24/7 | 小規模プロジェクト |
-| **AWS（本番環境）** | $30-100/月 | ⭐⭐⭐⭐⭐ | 24/7 | AWS学習 |
-| **ローカル + ドキュメント** | $0/月 | ⭐ | オンデマンド | クイックスタート |
+| **AWS（本番環境）** | $30-100/月 | ⭐⭐⭐⭐⭐ | 24/7 | 本番運用・AWS学習 |
 
 *バックエンドは15分非アクティブでスリープ、約15秒で起動
 
 ---
 
-## 🎯 推奨: Vercel + Render.com（無料）
+## 🎯 推奨デプロイフロー
 
-ポートフォリオプロジェクトに最適！
+```
+Phase 1: Docker Compose（ローカル）
+  ↓ SRE基盤実装・動作確認
+Phase 2: Vercel + Render（無料公開）
+  ↓ ポートフォリオ公開
+Phase 3: AWS ECS + Terraform（本番環境）
+  ↓ 本番レベルのインフラ・IaC学習
+```
+
+---
+
+## 🐳 オプション1: Docker Compose（ローカル開発）
+
+### 概要
+
+最も基本的な環境。開発・学習に最適。
+
+### アーキテクチャ
+
+```
+localhost:3000（フロントエンド - Next.js）
+   ↓
+localhost:8000（バックエンドAPI - FastAPI）
+   ↓
+localhost:5432（PostgreSQL）
+
+※すべてDockerコンテナで動作
+```
+
+**注:** Redis、監視ツール等はPhase 1で追加予定
+
+### デプロイ手順
+
+#### 1. プロジェクトディレクトリに移動
+
+```bash
+# プロジェクトのルートディレクトリに移動
+cd {your-project-path}/app1
+
+# 例: Windowsの場合
+cd C:\Users\{username}\Desktop\app1
+
+# 例: macOS/Linuxの場合
+cd ~/Desktop/app1
+```
+
+#### 2. 起動
+
+```bash
+# フォアグラウンドで全てのコンテナをビルドして起動
+docker-compose up --build
+
+# バックグラウンドで全てのコンテナをビルドして起動（推奨）
+docker-compose up -d --build
+```
+
+#### 3. 起動確認
+
+```bash
+# コンテナを一覧表示（起動中のコンテナのみ）
+docker container ls
+
+# ログを確認（エラーがある場合）
+docker-compose logs
+
+# 特定のコンテナのログを確認（エラーがある場合）
+docker container logs {container-name}
+```
+
+#### 4. アクセス
+
+- **フロントエンド**: http://localhost:3000
+- **バックエンド API**: http://localhost:8000
+- **API ドキュメント（Swagger UI）**: http://localhost:8000/docs
+  - 全APIエンドポイントの確認・テストが可能な対話的UIツール
+
+#### 5. 停止
+
+```bash
+# 全てのコンテナを停止（推奨）（データは保持される）
+docker-compose down
+
+# 全てのコンテナを停止 + ボリュームも削除（⚠️ データベースのデータが完全に削除される）
+docker-compose down -v
+```
+
+### メリット
+
+- ✅ **完全無料**
+- ✅ **高速な開発サイクル（新機能の追加・修正・テストが容易）**
+- ✅ **外部依存なし**
+
+### デメリット
+
+- ❌ **外部からアクセス不可**
+- ❌ **Docker Desktop起動中のみ動作**
+
+---
+
+## 🌐 オプション2: Vercel + Render.com（無料公開）
+
+### 概要
+
+ポートフォリオプロジェクトに最適！完全無料で公開可能。
 
 ### アーキテクチャ
 
@@ -28,176 +130,194 @@
    ↓ HTTPS
 バックエンドAPI（Render.com）
    ↓
-データベース（インメモリ/将来的にPostgreSQL）
+データベース（Pythonのメモリ内配列）
 ```
+
+**注:** 現在はPythonの変数（`todos_db = []`）でデータ管理。アプリ再起動時にデータ消失。Phase 1でPostgreSQL実装予定
+
+### 🎨 フロントエンド: Vercelにデプロイ
+
+#### 事前準備
+
+1. **GitHubアカウント**を用意
+2. **コードをGitHubにプッシュ**（まだの場合）
+
+```bash
+git add .
+git commit -m "feat: prepare for Vercel and Render deployment"
+git push origin main
+```
+
+#### ステップ1: Vercelアカウント作成
+
+1. https://vercel.com にアクセス
+2. **「Start Deploying」** または **「Sign Up」** をクリック
+3. **「Continue with GitHub」** を選択
+4. GitHub認証を許可
+
+#### ステップ2: プロジェクトをインポート
+
+1. Vercelダッシュボードで **「Add New... → Project」** をクリック
+2. **「Import Git Repository」** セクションで自分のリポジトリ（app1）を探す
+   - リポジトリが表示されない場合: **「Adjust GitHub App Permissions」** をクリックして権限を付与
+3. リポジトリの **「Import」** ボタンをクリック
+
+#### ステップ3: プロジェクト設定
+
+**Configure Project画面で以下を設定:**
+
+```
+Project Name: todo-app（任意の名前）
+
+Framework Preset: Next.js（自動検出される）
+
+Root Directory: frontend  ← 重要！「Edit」をクリックして設定
+
+Build and Output Settings:
+  Build Command: npm run build（デフォルトのまま）
+  Output Directory: .next（デフォルトのまま）
+  Install Command: npm install（デフォルトのまま）
+```
+
+#### ステップ4: 環境変数の設定（後で設定）
+
+**今は設定しない**（バックエンドURLが未確定のため）
+
+#### ステップ5: デプロイ実行
+
+1. **「Deploy」** ボタンをクリック
+2. ビルドが開始される（2-3分）
+3. 完了すると **「Congratulations!」** 画面が表示される
+4. **URLをコピー** する
+   - 例: `https://todo-app-xxx.vercel.app`
+
+#### ✅ 動作確認
+
+1. 表示されたURLにアクセス
+2. フロントエンドは表示される
+3. **ただし、APIエラーが出る**（バックエンドがまだないため）← 正常
+
+**次: バックエンドをデプロイ →**
 
 ---
 
-## 🌐 オプション1: 無料デプロイ（推奨）
+### ⚙️ バックエンド: Render.comにデプロイ
 
-### フロントエンド: Vercelにデプロイ
+#### ステップ1: Render.comアカウント作成
 
-#### ステップ1: フロントエンドの準備
+1. https://render.com にアクセス
+2. **「Get Started」** または **「Sign Up」** をクリック
+3. **「GitHub」** を選択
+4. GitHub認証を許可
 
-```bash
-cd frontend
+#### ステップ2: Web Serviceを作成
 
-# 本番ビルドを作成
-npm run build
+1. Renderダッシュボードで **「New +」** → **「Web Service」** をクリック
+2. **「Build and deploy from a Git repository」** を選択 → **「Next」**
+3. 右側で **「Configure account」** をクリック（初回のみ）
+   - リポジトリへのアクセス権限を付与
+4. 自分のリポジトリ（app1）を探して **「Connect」** をクリック
 
-# ローカルでテスト
-npm start
-```
+#### ステップ3: サービス設定
 
-#### ステップ2: Vercelにデプロイ
-
-**方法A: Vercel CLI を使用**
-
-```bash
-# Vercel CLI をインストール
-npm install -g vercel
-
-# ログイン
-vercel login
-
-# デプロイ
-cd frontend
-vercel
-
-# プロンプトに従って設定:
-# - プロジェクト名: todo-app
-# - ビルドコマンド: npm run build
-# - 出力ディレクトリ: .next
-```
-
-**方法B: GitHub連携を使用**
-
-1. [vercel.com](https://vercel.com) にアクセス
-2. GitHubでサインイン
-3. 「New Project」をクリック
-4. リポジトリをインポート
-5. 設定:
-   ```
-   Framework: Next.js
-   Root Directory: frontend
-   Build Command: npm run build
-   Output Directory: .next
-   環境変数:
-     NEXT_PUBLIC_API_URL=https://your-backend.onrender.com
-   ```
-6. デプロイ！
-
-**結果:**
-```
-アプリが公開されました: https://todo-app-xxx.vercel.app
-```
-
----
-
-### バックエンド: Render.comにデプロイ
-
-#### ステップ1: バックエンドの準備
-
-```bash
-cd backend
-
-# ローカルでテスト
-uvicorn main:app --reload
-```
-
-#### ステップ2: render.yaml を作成
-
-プロジェクトルートに `render.yaml` を作成:
-
-```yaml
-services:
-  - type: web
-    name: todo-api
-    env: python
-    region: oregon
-    plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
-      - key: ENVIRONMENT
-        value: production
-```
-
-#### ステップ3: Renderにデプロイ
-
-1. [render.com](https://render.com) にアクセス
-2. GitHubでサインイン
-3. 「New +」→「Web Service」をクリック
-4. リポジトリを接続
-5. 設定:
-   ```
-   Name: todo-api
-   Environment: Python 3
-   Build Command: pip install -r requirements.txt
-   Start Command: uvicorn main:app --host 0.0.0.0 --port $PORT
-   Plan: Free
-   ```
-6. 必要に応じて環境変数を追加
-7. デプロイ！
-
-**結果:**
-```
-APIが公開されました: https://todo-api-xxx.onrender.com
-```
-
-#### ステップ4: フロントエンドの環境変数を更新
-
-Vercelの環境変数を更新:
+**以下を設定:**
 
 ```
-NEXT_PUBLIC_API_URL=https://todo-api-xxx.onrender.com
-```
+Name: todo-api（任意の名前）
 
----
+Region: Oregon (US West)（推奨・無料）
 
-## 💰 オプション2: Railway（低コスト）
+Branch: main
 
-すべてを1か所で管理できる統合プラットフォーム。
+Root Directory: backend  ← 重要！
 
-### 料金
+Runtime: Python 3
 
-- **Hobby Plan**: $5/月
-- データベース込み
-- スリープなし
-
-### デプロイ手順
-
-1. [railway.app](https://railway.app) にアクセス
-2. GitHubでサインイン
-3. 「New Project」→「Deploy from GitHub repo」
-4. リポジトリを選択
-5. サービスを設定:
-
-**フロントエンド:**
-```
-Root Directory: frontend
-Build Command: npm run build
-Start Command: npm start
-Port: 3000
-```
-
-**バックエンド:**
-```
-Root Directory: backend
 Build Command: pip install -r requirements.txt
+
 Start Command: uvicorn main:app --host 0.0.0.0 --port $PORT
-Port: 8000
+
+Instance Type: Free
 ```
 
-**PostgreSQL:**
+#### ステップ4: 環境変数の設定
+
+**Advanced → Environment Variables** セクションで追加:
+
 ```
-Add → Database → PostgreSQL
+Key: ENVIRONMENT
+Value: production
 ```
 
-6. 環境変数を設定
-7. デプロイ！
+**Add Environment Variable** をクリック
+
+#### ステップ5: デプロイ実行
+
+1. **「Create Web Service」** ボタンをクリック
+2. ビルドが開始される（3-5分）
+3. ログが表示される（エラーがないか確認）
+4. 完了すると **「Live」** ステータスになる
+5. **URLをコピー** する
+   - ページ上部に表示: `https://todo-api-xxx.onrender.com`
+
+#### ✅ 動作確認
+
+1. URLにアクセス: `https://todo-api-xxx.onrender.com`
+   - 応答: `{"status":"healthy","message":"Todo API is running!","version":"1.0.0"}`
+2. Swagger UIにアクセス: `https://todo-api-xxx.onrender.com/docs`
+   - APIドキュメントが表示される ✅
+
+**次: フロントエンドとバックエンドを接続 →**
+
+---
+
+### 🔗 フロントエンドとバックエンドを接続
+
+#### ステップ1: Vercelに環境変数を設定
+
+1. Vercelダッシュボードに戻る
+2. デプロイしたプロジェクト（todo-app）をクリック
+3. **「Settings」** タブをクリック
+4. 左メニューで **「Environment Variables」** をクリック
+5. 以下を追加:
+
+```
+Key: NEXT_PUBLIC_API_URL
+Value: https://todo-api-xxx.onrender.com  ← Render.comのURL
+```
+
+6. **「Save」** をクリック
+
+#### ステップ2: 再デプロイ
+
+1. **「Deployments」** タブに移動
+2. 最新のデプロイメントの右側 **「...」** メニューをクリック
+3. **「Redeploy」** を選択
+4. **「Redeploy」** ボタンをクリック
+5. ビルドが完了するまで待つ（1-2分）
+
+#### ✅ 最終確認
+
+1. Vercel URLにアクセス: `https://todo-app-xxx.vercel.app`
+2. Todoを作成してみる
+3. **動作する！** 🎉
+
+**注意:** 
+- 初回アクセス時、Render.comがスリープから復帰するため15秒ほどかかる
+- 15分非アクティブでスリープするため、再アクセス時も同様
+
+### メリット
+
+- ✅ **完全無料**
+- ✅ **実際のURLを提供可能**
+- ✅ **自動デプロイ（Git連携）**
+- ✅ **HTTPS対応**
+
+### デメリット
+
+- ⚠️ **Render.comは15分非アクティブでスリープ**
+- ⚠️ **起動に約15秒かかる**
+- ⚠️ **PostgreSQLは無料枠に制限あり**
 
 ---
 
@@ -260,11 +380,11 @@ aws ecr create-repository --repository-name todo-api
 
 # Dockerイメージをビルド
 cd backend
-docker build -t todo-api .
+docker image build -t todo-api .
 
 # ECRにプッシュ
-docker tag todo-api:latest <account-id>.dkr.ecr.us-east-1.amazonaws.com/todo-api:latest
-docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/todo-api:latest
+docker image tag todo-api:latest {account-id}.dkr.ecr.us-east-1.amazonaws.com/todo-api:latest
+docker image push {account-id}.dkr.ecr.us-east-1.amazonaws.com/todo-api:latest
 
 # ECSタスク定義を作成
 # ECSサービスを作成
@@ -315,85 +435,100 @@ resource "aws_rds_cluster" "main" {
 }
 ```
 
----
-
-## 📸 オプション4: ローカル + ドキュメント（最速）
-
-コストゼロでポートフォリオを作成。
-
-### 手順
-
-1. **アプリを起動**
-   ```bash
-   docker-compose up --build
-   ```
-
-2. **スクリーンショットを撮影**
-   - メインダッシュボード
-   - Todo作成フォーム
-   - Todoリスト
-   - フィルター表示
-   - モバイル表示
-
-3. **デモ動画を録画**
-   - 30-60秒の操作動画
-   - GIFまたはMP4形式
-
-4. **ドキュメントに追加**
-   ```markdown
-   ## デモ
-   
-   ![デモ](docs/demo.gif)
-   
-   ## スクリーンショット
-   
-   ![ダッシュボード](docs/images/dashboard.png)
-   ```
-
 ### メリット
 
-- ✅ コストゼロ
-- ✅ すぐに完成
-- ✅ 面接で十分アピールできる
-- ✅ サーバー管理不要
+- ✅ **本番環境レベルのインフラ**
+- ✅ **AWSスキルの実証**
+- ✅ **スケーラブル**
+- ✅ **IaC（Terraform）の学習**
 
 ### デメリット
 
-- ⚠️ 実際に触ってもらえない
-- ⚠️ URLを提供できない
+- ❌ **コストが高い（$30-100/月）**
+- ❌ **設定が複雑**
+- ❌ **学習コストが高い**
 
 ---
 
 ## 🎯 推奨デプロイ戦略（段階的）
 
-### フェーズ1: ローカル + ドキュメント
+### Phase 1: SRE基盤実装（ローカル開発）
+
+**目的:** 本番運用に必要なSRE基盤を構築
+
 ```
-目的: 最速でポートフォリオ完成
+期間: 2-4週間
 コスト: $0
-期間: 1日
+
+実装内容:
+- PostgreSQL統合（SQLAlchemy + Alembic）
+- Redis追加（キャッシング）
+- ヘルスチェック (/liveness, /readiness)
+- 構造化ログ（JSON形式）
+- Prometheusメトリクス（/metrics）
+- Prometheus + Grafana監視
+- 負荷テスト（Locust/k6）
 ```
 
-### フェーズ2: 無料デプロイ（Vercel + Render）
+**この段階で:**
+- ✅ ローカルで完全に動作
+- ✅ 監視基盤が整っている
+- ✅ 本番レディな状態
+
+**詳細:** README.mdの「Phase 1: SRE基盤強化」を参照
+
+---
+
+### Phase 2: Vercel + Render（無料公開）
+
+**目的:** ポートフォリオとして公開
+
 ```
-目的: 実際に触れるデモを提供
-コスト: $0
 期間: 1-2日
-制約: バックエンドがスリープ
+コスト: $0
+
+実装内容:
+- フロントエンドをVercelにデプロイ
+- バックエンドをRender.comにデプロイ
+- 環境変数の設定
+- CORS設定
 ```
 
-### フェーズ3: Railway（低コスト）
-```
-目的: 安定稼働のデモ
-コスト: $5/月
-期間: 1日
-```
+**この段階で:**
+- ✅ 実際のURLを提供可能
+- ✅ 採用担当者が触れる
+- ✅ GitHubからの自動デプロイ
 
-### フェーズ4: AWS（本格運用）
+---
+
+### Phase 3: AWS（本番環境・IaC学習）
+
+**目的:** AWSスキルの実証・本番レベルのインフラ構築
+
 ```
-目的: AWSスキルの実証
+期間: 2-3週間
 コスト: $30-100/月
-期間: 1-2週間
+
+実装内容:
+- Terraformでインフラ構築
+- ECS Fargate（コンテナオーケストレーション）
+- RDS Aurora（PostgreSQL）+ ElastiCache（Redis）
+- ALB（ロードバランサー）
+- Route53（DNS）+ ACM（SSL証明書）
+- CI/CD（GitHub Actions → ECR → ECS）
+- 監視（CloudWatch/Datadog）
 ```
+
+**この段階で:**
+- ✅ 本番レベルのインフラ
+- ✅ IaCスキルの実証
+- ✅ SREとしての総合力アピール
+- ✅ AWSエコシステムの理解
+
+**技術選定の理由:**
+- FastAPI（Python）はモノリスアーキテクチャに適している
+- ECS Fargateはシンプルで運用しやすい
+- K8s/EKSは過剰（Goマイクロサービス向き）
 
 ---
 
@@ -477,11 +612,19 @@ app.add_middleware(
 
 ## 📚 参考リンク
 
+### 無料デプロイ
 - [Vercel Documentation](https://vercel.com/docs)
 - [Render Documentation](https://render.com/docs)
-- [Railway Documentation](https://docs.railway.app/)
+
+### AWS
 - [AWS ECS Documentation](https://docs.aws.amazon.com/ecs/)
+- [AWS EKS Documentation](https://docs.aws.amazon.com/eks/)
 - [Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+
+### Docker & ECS
+- [Docker Documentation](https://docs.docker.com/)
+- [AWS ECS Best Practices](https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/)
+- [AWS Fargate Documentation](https://docs.aws.amazon.com/fargate/)
 
 ---
 

@@ -8,20 +8,28 @@
 
 ```
 main（本番環境）
-  └─ develop（開発統合）
-      ├─ feature/todo-crud
-      ├─ feature/user-auth
-      └─ feature/database-integration
+  ↓
+  ├─ feat/todo-crud
+  ├─ feat/user-auth
+  └─ feat/database-integration
 ```
+
+**注:** GitHub Flow を採用（シンプルな個人開発向け）
 
 ### ブランチ命名規則
 
-- `feature/*` - 新機能（例: `feature/add-statistics`）
+- `feat/*` - 新機能（例: `feat/add-statistics`）
 - `fix/*` - バグ修正（例: `fix/todo-deletion-error`）
 - `docs/*` - ドキュメント更新（例: `docs/update-readme`）
+- `style/*` - コードスタイル（例: `style/format-code`）
 - `refactor/*` - リファクタリング（例: `refactor/api-structure`）
+- `perf/*` - パフォーマンス改善（例: `perf/optimize-api-response`）
 - `test/*` - テスト追加（例: `test/add-unit-tests`）
 - `chore/*` - 雑務（例: `chore/update-dependencies`）
+
+**重要:** Conventional Commits標準に準拠
+- `feat` = feature の短縮形
+- コミットメッセージと一貫性を保つ
 
 ## 📝 コミットメッセージ規約
 
@@ -59,7 +67,7 @@ chore: update dependencies
 # main から feature ブランチを作成
 git checkout main
 git pull origin main
-git checkout -b feature/your-feature-name
+git checkout -b feat/your-feature-name
 ```
 
 ### 2. 変更を加える
@@ -79,7 +87,7 @@ git commit -m "feat: add your feature description"
 
 ```bash
 # リモートにプッシュ
-git push origin feature/your-feature-name
+git push origin feat/your-feature-name
 
 # GitHubでPull Requestを作成
 # （チームプロジェクトの場合）コードレビューを依頼
@@ -90,7 +98,7 @@ git push origin feature/your-feature-name
 ```bash
 # 承認後、mainにマージ
 git checkout main
-git merge feature/your-feature-name
+git merge feat/your-feature-name
 git push origin main
 
 # または、GitHubのマージボタンを使用
@@ -100,10 +108,10 @@ git push origin main
 
 ```bash
 # ローカルブランチを削除
-git branch -d feature/your-feature-name
+git branch -d feat/your-feature-name
 
 # リモートブランチを削除
-git push origin --delete feature/your-feature-name
+git push origin --delete feat/your-feature-name
 ```
 
 ## 🔄 定期的なタスク
@@ -180,7 +188,7 @@ git checkout main
 git pull origin main
 
 # feature ブランチに戻ってリベース
-git checkout feature/your-feature
+git checkout feat/your-feature
 git rebase main
 
 # コンフリクトを解決
