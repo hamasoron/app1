@@ -3,6 +3,10 @@ import type { Todo, TodoCreate, TodoUpdate, TodoStats } from '@/types'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
+// Debug: Log API URL
+console.log('🔧 API_URL:', API_URL)
+console.log('🔧 NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL)
+
 const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
