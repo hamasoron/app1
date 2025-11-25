@@ -77,8 +77,6 @@ docker-compose up -d --build
 #### 3. 起動確認
 
 ```bash
-# コンテナを一覧表示（起動中のコンテナのみ）
-docker container ls
 
 # ログを確認（エラーがある場合）
 docker-compose logs
@@ -153,30 +151,33 @@ git push origin main
 1. https://vercel.com にアクセス
 2. **「Start Deploying」** または **「Sign Up」** をクリック
 3. **「Continue with GitHub」** を選択
-4. GitHub認証を許可
+4. **「Authorize Vercel」** をクリック
+5. **GitHubとVercel間で認可・連携が完了**
 
 #### ステップ2: プロジェクトをインポート
 
-1. Vercelダッシュボードで **「Add New... → Project」** をクリック
-2. **「Import Git Repository」** セクションで自分のリポジトリ（app1）を探す
-   - リポジトリが表示されない場合: **「Adjust GitHub App Permissions」** をクリックして権限を付与
-3. リポジトリの **「Import」** ボタンをクリック
+1. Vercelダッシュボードに **「Import Git Repository」** セクションがあるかどうかを確認 
+2. **「Install」** をクリック
+3. **「どのリポジトリ／組織と連携するか」を選択」** → **「All repositories」** が推奨
+4. **「Install」** をクリック
+5. **「GitHubのパスワードを入力」** → **「Confirm」** をクリック
+6. **GitHubの全てのリポジトリが表示** されるので、**app1**を探して **「Import」** をクリック
 
 #### ステップ3: プロジェクト設定
 
 **Configure Project画面で以下を設定:**
 
 ```
-Project Name: todo-app（任意の名前）
-
-Framework Preset: Next.js（自動検出される）
+Project Name: app1（任意の名前）
 
 Root Directory: frontend  ← 重要！「Edit」をクリックして設定
 
+Framework Preset: Next.js（自動検出される）
+
 Build and Output Settings:
-  Build Command: npm run build（デフォルトのまま）
-  Output Directory: .next（デフォルトのまま）
-  Install Command: npm install（デフォルトのまま）
+  Build Command: `npm run build` or `next build`（デフォルトのまま）
+  Output Directory: Next.js default（デフォルトのまま）
+  Install Command: `yarn install`, `pnpm install`, `npm install`, or `bun install`（デフォルトのまま）
 ```
 
 #### ステップ4: 環境変数の設定（後で設定）
@@ -189,7 +190,7 @@ Build and Output Settings:
 2. ビルドが開始される（2-3分）
 3. 完了すると **「Congratulations!」** 画面が表示される
 4. **URLをコピー** する
-   - 例: `https://todo-app-xxx.vercel.app`
+   - 例: `https://app1-three-psi.vercel.app`
 
 #### ✅ 動作確認
 
@@ -206,54 +207,65 @@ Build and Output Settings:
 #### ステップ1: Render.comアカウント作成
 
 1. https://render.com にアクセス
-2. **「Get Started」** または **「Sign Up」** をクリック
+2. **「Get Started for Free」** または **「Sign In」** をクリック
 3. **「GitHub」** を選択
-4. GitHub認証を許可
+4. **「Authorize render」** をクリック
+4. メール認証を挟んで**GitHub認可・連携が完了**
 
 #### ステップ2: Web Serviceを作成
 
-1. Renderダッシュボードで **「New +」** → **「Web Service」** をクリック
-2. **「Build and deploy from a Git repository」** を選択 → **「Next」**
-3. 右側で **「Configure account」** をクリック（初回のみ）
-   - リポジトリへのアクセス権限を付与
-4. 自分のリポジトリ（app1）を探して **「Connect」** をクリック
+1. Renderダッシュボードで **「New Web Service」** をクリック
+2. **「Connect Git provider」** → **「GitHub」** をクリック
+3. **「All repositories」** が推奨
+4. **「Install」** をクリック
+5. **「GitHubのパスワードを入力」** → **「Confirm」** をクリック
+6. **GitHubの全てのリポジトリが表示** されるので、**app1**をクリック
 
 #### ステップ3: サービス設定
 
 **以下を設定:**
 
 ```
-Name: todo-api（任意の名前）
+Source Code: {GitHubリポジトリ名}
 
-Region: Oregon (US West)（推奨・無料）
+Select a service type: Web Service
+
+Name: app1（任意の名前）
+
+Language: Python 3
 
 Branch: main
 
+Region: Oregon (US West)（推奨・無料）
+
 Root Directory: backend  ← 重要！
 
-Runtime: Python 3
+Build Command: `backend/ $ pip install -r requirements.txt`
+Start Command: `backend/ $ uvicorn main:app --host 0.0.0.0 --port $PORT`
 
-Build Command: pip install -r requirements.txt
+Instance Type: Free （推奨・無料）
 
-Start Command: uvicorn main:app --host 0.0.0.0 --port $PORT
-
-Instance Type: Free
+**注:** `backend/runtime.txt` でPythonバージョン（3.11.11）を指定しています
 ```
 
-#### ステップ4: 環境変数の設定
+**⚠️ 重要: Start Commandはフレームワークによって異なります**
 
-**Advanced → Environment Variables** セクションで追加:
+| フレームワーク | タイプ | Start Command |
+|------------|------|---------------|
+| **FastAPI** | ASGI | `uvicorn main:app --host 0.0.0.0 --port $PORT` |
+| **Django** | WSGI | `gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT` |
+| **Flask** | WSGI | `gunicorn app:app --bind 0.0.0.0:$PORT` |
+
+- **ASGI** (Asynchronous): 非同期処理対応（FastAPI、Starlette等）
+- **WSGI** (Web Server Gateway Interface): 従来の同期処理（Django、Flask等）
+
+**このプロジェクトはFastAPIを使用しているため、`uvicorn`を使用します。**
 
 ```
-Key: ENVIRONMENT
-Value: production
-```
 
-**Add Environment Variable** をクリック
+#### ステップ4: デプロイ実行
 
-#### ステップ5: デプロイ実行
-
-1. **「Create Web Service」** ボタンをクリック
+1. **「Deploy Web Service」** ボタンをクリック
 2. ビルドが開始される（3-5分）
 3. ログが表示される（エラーがないか確認）
 4. 完了すると **「Live」** ステータスになる
@@ -318,6 +330,109 @@ Value: https://todo-api-xxx.onrender.com  ← Render.comのURL
 - ⚠️ **Render.comは15分非アクティブでスリープ**
 - ⚠️ **起動に約15秒かかる**
 - ⚠️ **PostgreSQLは無料枠に制限あり**
+
+---
+
+### 🌐 オプション: カスタムドメインの設定（Valueドメイン）
+
+#### 推奨タイミング
+
+- ✅ フロントエンド・バックエンドの両方が動作確認済み
+- ✅ Todo作成・削除などの基本機能が正常動作
+- ⚠️ 開発途中での設定は非推奨（フローが中断される）
+
+#### 前提条件
+
+- Valueドメインでドメインを取得済み
+- VercelとRender.comのデプロイが完了済み
+
+#### ステップ1: Vercelでドメインを追加
+
+1. Vercelダッシュボード → プロジェクト（app1）をクリック
+2. **「Settings」** タブをクリック
+3. 左メニューで **「Domains」** をクリック
+4. カスタムドメインを入力
+   - 例: `todo.yourdomain.com` または `yourdomain.com`
+5. **「Add」** をクリック
+6. Vercelが必要なDNS設定を表示
+
+#### ステップ2: Valueドメイン側でDNS設定
+
+1. https://www.value-domain.com にログイン
+2. **「ドメイン」** → **「DNS設定」** をクリック
+3. 対象のドメインを選択
+4. DNS設定を追加:
+
+**サブドメインを使う場合（`todo.yourdomain.com`）:**
+
+```
+CNAME todo cname.vercel-dns.com.
+```
+
+**ルートドメインを使う場合（`yourdomain.com`）:**
+
+```
+A @ 76.76.21.21
+```
+
+**注:** Vercelの指示に従って、表示されたIPアドレスやCNAMEを設定してください。
+
+5. **「保存する」** をクリック
+
+#### ステップ3: DNS伝播を待つ
+
+- DNS伝播には**最大48時間**かかる場合があります（通常は数分〜数時間）
+- 確認方法:
+
+```bash
+# Windows PowerShell
+nslookup todo.yourdomain.com
+
+# macOS/Linux
+dig todo.yourdomain.com
+```
+
+#### ステップ4: Vercelで確認
+
+1. Vercelダッシュボード → **「Domains」** に戻る
+2. ドメインのステータスが **「Valid Configuration」** になればOK
+3. 自動的にSSL証明書が発行される（Let's Encrypt）
+
+#### ✅ 動作確認
+
+1. カスタムドメインでアクセス: `https://todo.yourdomain.com`
+2. Todoアプリが表示される ✅
+3. HTTPSが有効になっている ✅
+
+#### トラブルシューティング
+
+**DNS設定が反映されない場合:**
+
+```bash
+# DNSキャッシュをクリア（Windows）
+ipconfig /flushdns
+
+# DNSキャッシュをクリア（macOS）
+sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+```
+
+**Vercelでエラーが出る場合:**
+
+- Valueドメイン側の設定を再確認
+- CNAMEレコードの末尾に `.` が必要な場合があります
+- TTL（Time To Live）を短く設定すると伝播が早くなります
+
+#### メリット
+
+- ✅ **覚えやすいURL**
+- ✅ **プロフェッショナルな印象**
+- ✅ **無料でHTTPS対応**
+
+#### デメリット
+
+- ❌ **ドメイン費用（年間 ¥1,000〜¥3,000程度）**
+- ⚠️ **DNS設定の知識が必要**
+- ⚠️ **設定に時間がかかる**
 
 ---
 
