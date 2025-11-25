@@ -1,11 +1,11 @@
 import axios from 'axios'
 import type { Todo, TodoCreate, TodoUpdate, TodoStats } from '@/types'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-
-// Debug: Log API URL
-console.log('🔧 API_URL:', API_URL)
-console.log('🔧 NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL)
+// Use production URL for Vercel deployment, localhost for local development
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 
+  (typeof window !== 'undefined' && window.location.hostname !== 'localhost' 
+    ? 'https://app1-yx9c.onrender.com' 
+    : 'http://localhost:8000')
 
 const apiClient = axios.create({
   baseURL: API_URL,
